@@ -26,7 +26,7 @@ Snake.prototype.init = function() {
   let neededSnake = this;
   setInterval(() => {
     this.moveSnake(); //arrow function in order to protect scope
-  }, 100);
+  }, 1000);
   document.onkeydown = function(event) {
     console.log(neededSnake);
     switch(event.keyCode) {
@@ -54,8 +54,20 @@ Snake.prototype.moveSnake = function() {
   const yBlockPos = this.snake[0].y;
   ctx.fillStyle = 'black';
   ctx.fillRect(xBlockPos, yBlockPos, this.heightBlock, this.heightBlock);
-  const newXBlockPos = this.snake[this.snakeLength-1].x + this.heightBlock*this.xVector;
-  const newYBlockPos = this.snake[this.snakeLength-1].y + this.heightBlock*this.yVector;
+  let newXBlockPos = this.snake[this.snakeLength-1].x + this.heightBlock*this.xVector;
+  let newYBlockPos = this.snake[this.snakeLength-1].y + this.heightBlock*this.yVector;
+  if (newXBlockPos >= 500) {
+    newXBlockPos %= 500;
+  }
+  if (newXBlockPos < 0) {
+    newXBlockPos += 500;
+  }
+  if (newYBlockPos < 0) {
+    newYBlockPos += 500;
+  }
+  if (newYBlockPos >= 500) {
+    newYBlockPos %= 500;
+  }
   this.snake.shift();
   this.snake.push({x: newXBlockPos, y: newYBlockPos});
   ctx.fillStyle = 'red';
