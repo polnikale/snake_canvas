@@ -4,6 +4,7 @@ let ctx = canvas.getContext('2d');
 let Snake = function(length, heightBlock, startPos) {
   this.snakeLength = length;
   this.heightBlock = heightBlock;
+  this.snake = [];
   this.x = startPos.x;
   this.y = startPos.y;
   this.xVector = 1;
@@ -11,24 +12,13 @@ let Snake = function(length, heightBlock, startPos) {
 };
 Snake.prototype.draw = function() {
   ctx.fillStyle = 'black';
-  ctx.fillRect(0, 0, 500, 500);
-  for (let counter = 0; counter < this.snakeLength; counter++) {
-    let blockXPos = this.x - counter*this.xVector*this.heightBlock;
-    let blockYPos = this.y - counter*this.yVector*this.heightBlock;
-    if (blockXPos >= 500) {
-      blockXPos %= 500;
-    }
-    if (blockXPos < 0) {
-      blockXPos += 500;
-    }
-    if (blockYPos >= 500) {
-      blockYPos %= 500;
-    }
-    if (blockYPos < 0) {
-      blockYPos += 500;
-    }
+  for (let i = 0; i < this.snakeLength; i++) {
+    let blockXPos = this.x + this.xVector*this.heightBlock*i;
+    let blockYPos = this.y + this.yVector*this.heightBlock*i;
     ctx.fillStyle = 'red';
     ctx.fillRect(blockXPos,blockYPos,this.heightBlock,this.heightBlock);
+    this.snake.push({x: blockXPos, y: blockYPos});
+    console.log(this.snake);
   }
 }
 Snake.prototype.init = function() {
@@ -36,7 +26,7 @@ Snake.prototype.init = function() {
   let neededSnake = this;
   setInterval(() => {
     this.moveSnake(); //arrow function in order to protect scope
-  }, 1000);
+  }, 100);
   document.onkeydown = function(event) {
     console.log(neededSnake);
     switch(event.keyCode) {
@@ -60,11 +50,16 @@ Snake.prototype.init = function() {
   };
 };
 Snake.prototype.moveSnake = function() {
-  this.x = (this.x + this.xVector*this.heightBlock) % 500;
-  this.y = (this.y + this.yVector*this.heightBlock) % 500;
-  console.log(this.x,'x+x',this.xVector);
-  console.log(this.y,'x+x',this.yVector);
-  this.draw();
+  const xBlockPos = this.snake[0].x;
+  const yBlockPos = this.snake[0].y;
+  ctx.fillStyle = 'black';
+  ctx.fillRect(xBlockPos, yBlockPos, this.heightBlock, this.heightBlock);
+  const newXBlockPos = this.snake[this.snakeLength-1].x + this.heightBlock*this.xVector;
+  const newYBlockPos = this.snake[this.snakeLength-1].y + this.heightBlock*this.yVector;
+  this.snake.shift();
+  this.snake.push({x: newXBlockPos, y: newYBlockPos});
+  ctx.fillStyle = 'red';
+  ctx.fillRect(newXBlockPos, newYBlockPos, this.heightBlock, this.heightBlock);
 };
 
 
