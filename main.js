@@ -131,5 +131,5 @@ Snake.prototype.checkForBodyCollision = function() {
 };
 
 
-let snake = new Snake(4,25, {x: 100, y: 100});
+let snake = new Snake(4,25, {x: Math.round(Math.random()*20)*25, y: Math.round(Math.random()*20)*25});
 snake.init();
